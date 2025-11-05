@@ -4,23 +4,23 @@ import com.ptit.pttk.assignment.model.Member;
 
 import java.sql.*;
 
-public class MemberDAO {
-	private final DataSource dataSource = new DataSource();
+public class MemberDAO extends DAO {
+	public MemberDAO() {
+		super();
+	}
 
 	private static final String INSERT_SQL = "INSERT INTO public.\"tblMember\" (username, password, fullname, date_of_birth, gender, phone, address) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id";
   private static final String SELECT_BY_USERNAME_SQL = "SELECT * FROM public.\"tblMember\" WHERE username = ?";
 
-	public int register(Member member) {
-		Connection connection = null;
+	public int register(Member member) throws SQLException {
 		int id = 0;
 		try {
 			if (this.existsUsername(member.getUsername())) {
 				return 0;
 			}
-			connection = dataSource.getConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(INSERT_SQL);
 
-			dataSource.beginTransaction(connection);
+			connection.setAutoCommit(false);
 			preparedStatement.setString(1, member.getUsername());
 			preparedStatement.setString(2, member.getPassword());
 			preparedStatement.setString(3, member.getFullname());
@@ -31,29 +31,25 @@ public class MemberDAO {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
 				id = resultSet.getInt(1);
-				dataSource.commitTransaction(connection);
+				connection.commit();
 			} else {
-				dataSource.rollbackTransaction(connection);
+				connection.rollback();
 				return 0;
 			}
 			resultSet.close();
 			preparedStatement.close();
 
 		} catch (SQLException e) {
-			dataSource.rollbackTransaction(connection);
+			connection.rollback();
 			e.printStackTrace();
-		} finally {
-			dataSource.closeResources(connection);
 		}
 
 		return id;
 	}
 
-	private boolean existsUsername(String username) {
-		Connection connection = null;
+	private boolean existsUsername(String username) throws SQLException {
 		boolean exists = false;
 		try {
-			connection = dataSource.getConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_USERNAME_SQL);
 			preparedStatement.setString(1, username);
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -62,8 +58,6 @@ public class MemberDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			dataSource.closeResources(connection);
 		}
 
 		return exists;

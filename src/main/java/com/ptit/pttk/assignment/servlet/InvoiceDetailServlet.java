@@ -1,6 +1,7 @@
 package com.ptit.pttk.assignment.servlet;
 
 import com.ptit.pttk.assignment.dao.InvoiceDAO;
+import com.ptit.pttk.assignment.dao.InvoiceDetailDAO;
 import com.ptit.pttk.assignment.model.InvoiceDetail;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -14,11 +15,11 @@ import java.util.List;
 
 @WebServlet("/invoice-detail")
 public class InvoiceDetailServlet extends HttpServlet {
-	private InvoiceDAO invoiceDAO;
+	private InvoiceDetailDAO invoiceDetailDAO;
 
 	@Override
 	public void init() {
-		invoiceDAO = new InvoiceDAO();
+		invoiceDetailDAO = new InvoiceDetailDAO();
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -32,7 +33,7 @@ public class InvoiceDetailServlet extends HttpServlet {
 				return;
 			}
 
-			List<InvoiceDetail> invoiceDetails = invoiceDAO.getInvoiceDetails(Integer.parseInt(invoiceId));
+			List<InvoiceDetail> invoiceDetails = invoiceDetailDAO.getInvoiceDetails(Integer.parseInt(invoiceId));
 			request.setAttribute("invoiceDetails", invoiceDetails);
 			request.setAttribute("customerName", customerName);
 			request.setAttribute("customerCode", customerCode);
@@ -40,6 +41,8 @@ public class InvoiceDetailServlet extends HttpServlet {
 			request.setAttribute("error", "ID khách hàng hoặc định dạng ngày không hợp lệ!");
 		} catch (IllegalArgumentException e) {
 			request.setAttribute("error", "Định dạng ngày không hợp lệ!");
+		} catch (SQLException e) {
+			request.setAttribute("error", "Lỗi truy xuất dữ liệu");
 		}
 
 		request.getRequestDispatcher("/invoiceDetailInterface.jsp").forward(request, response);

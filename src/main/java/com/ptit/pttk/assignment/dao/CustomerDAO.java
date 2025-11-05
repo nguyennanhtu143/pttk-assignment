@@ -6,12 +6,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class CustomerDAO {
-	private final DataSource dataSource = new DataSource();
+public class CustomerDAO extends DAO {
+	public CustomerDAO() {
+		super();
+	}
 
 	private static final String INSERT_SQL = "INSERT INTO public.\"tblCustomer\" (member_id, customer_code) VALUES (?, ?)";
 
-	public boolean create(Integer memberId) {
+	public boolean create(Integer memberId) throws SQLException {
 		StringBuilder customerCode = new StringBuilder("KH");
 		while (customerCode.length() < 6 - String.valueOf(customerCode.length()).length()) {
 			customerCode.append("0");
@@ -22,20 +24,17 @@ public class CustomerDAO {
 		Customer customer = new Customer(memberId, customerCode.toString());
 		Connection connection = null;
 		try {
-			connection = dataSource.getConnection();
 			PreparedStatement ps = connection.prepareStatement(INSERT_SQL);
 
-			dataSource.beginTransaction(connection);
+			connection.setAutoCommit(false);
 			ps.setInt(1, memberId);
 			ps.setString(2, customer.getCustomerCode());
 			ps.executeUpdate();
-			dataSource.commitTransaction(connection);
+			connection.commit();
 			result = true;
 		} catch (SQLException e) {
-			dataSource.rollbackTransaction(connection);
+			connection.rollback();
 			e.printStackTrace();
-		} finally {
-			dataSource.closeResources(connection);
 		}
 
 		return result;
