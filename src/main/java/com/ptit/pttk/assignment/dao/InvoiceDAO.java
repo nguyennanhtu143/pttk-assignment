@@ -18,7 +18,7 @@ public class InvoiceDAO extends DAO {
 				"SELECT id, tbl_customer_id, invoice_date, total_amount " +
 							"FROM public.\"tblInvoice\" " +
 							"WHERE tbl_customer_id = ? AND invoice_date BETWEEN ? AND ? " +
-							"ORDER BY invoice_date DESC";
+							"ORDER BY invoice_date ASC";
 
 	public List<Invoice> getCustomerInvoices(Integer customerId, Date startDate, Date endDate) throws SQLException {
 		List<Invoice> invoices = new ArrayList<>();
@@ -45,6 +45,8 @@ public class InvoiceDAO extends DAO {
 		return invoices;
 	}
 }
+
+
 
 
 

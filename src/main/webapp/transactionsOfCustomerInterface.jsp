@@ -2,6 +2,7 @@
 <%@ page import="com.ptit.pttk.assignment.model.Invoice" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.Date" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -43,6 +44,7 @@
     String startDate = (String) request.getAttribute("startDate");
     String endDate = (String) request.getAttribute("endDate");
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+	int count = 1;
     
     if (invoices != null && !invoices.isEmpty()) { 
     %>
@@ -57,7 +59,7 @@
     <table>
         <thead>
             <tr>
-                <th>Mã hóa đơn</th>
+                <th>Thứ tự</th>
                 <th>Ngày lập</th>
                 <th class="text-right">Tổng tiền</th>
                 <th>Chi tiết</th>
@@ -66,7 +68,7 @@
         <tbody>
             <% for (Invoice invoice : invoices) { %>
             <tr>
-                <td><%= invoice.getId() %></td>
+                <td><%= count++ %></td>
                 <td><%= invoice.getInvoiceDate() != null ? dateFormat.format(invoice.getInvoiceDate()) : "" %></td>
                 <td class="text-right">
                     <%= invoice.getTotalAmount() != null ? String.format("%,.0f", invoice.getTotalAmount()) : "0" %> VNĐ
