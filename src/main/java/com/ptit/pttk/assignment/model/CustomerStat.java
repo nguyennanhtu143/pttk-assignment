@@ -1,6 +1,6 @@
 package com.ptit.pttk.assignment.model;
 
-public class CustomerStat {
+public class CustomerStat extends Customer {
 	private Integer customerId;
 	private String customerName;
 	private String customerCode;
@@ -8,6 +8,7 @@ public class CustomerStat {
 	private Double totalSpent;
 
 	public CustomerStat(Integer customerId, String customerName, String customerCode, Integer purchasedCount, Double totalSpent) {
+		super();
 		this.customerId = customerId;
 		this.customerName = customerName;
 		this.customerCode = customerCode;

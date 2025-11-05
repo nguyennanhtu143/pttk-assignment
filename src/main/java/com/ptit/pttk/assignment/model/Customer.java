@@ -4,6 +4,9 @@ public class Customer {
 	private Integer memberId;
 	private String customerCode;
 
+	public Customer() {
+	}
+
 	public Customer(Integer memberId, String customerCode) {
 		this.memberId = memberId;
 		this.customerCode = customerCode;
