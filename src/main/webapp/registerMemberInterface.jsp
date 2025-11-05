@@ -21,8 +21,12 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div>
         <h2>Đăng ký thành viên hệ thống</h2>
+
+        <div style="margin-bottom: 16px;">
+            <a href="${pageContext.request.contextPath}/" class="btn back-btn">← Quay lại</a>
+        </div>
 
         <% if (request.getAttribute("error") != null) { %>
             <div class="error"><%= request.getAttribute("error") %></div>
@@ -75,10 +79,6 @@
 
             <button id="submitBtn" type="submit" class="btn">Đăng ký</button>
         </form>
-
-        <div class="links">
-            <a href="${pageContext.request.contextPath}/login">Đã có tài khoản? Đăng nhập</a>
-        </div>
     </div>
     <script>
         (function() {
@@ -112,6 +112,7 @@
     </script>
 </body>
 </html>
+
 
 
 

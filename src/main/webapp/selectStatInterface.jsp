@@ -16,9 +16,11 @@
 <body>
 <div>
     <h2>Chọn chức năng thống kê</h2>
+    <div style="margin-bottom: 16px;">
+        <a href="${pageContext.request.contextPath}/mainManagerInterface.jsp" class="btn back-btn">← Quay lại</a>
+    </div>
     <div class="actions">
         <a class="btn" href="${pageContext.request.contextPath}/customer-stat" style="margin-top: 40px;">Thống kê khách hàng theo doanh thu</a>
-        <!-- Có thể bổ sung các lựa chọn thống kê khác sau này -->
     </div>
 </div>
 </body>

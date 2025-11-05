@@ -14,14 +14,15 @@
     </style>
     </head>
 <body>
-    <div class="container">
+    <div>
         <h2>Điện máy vjp pro</h2>
         <div class="actions">
-            <a class="btn" href="${pageContext.request.contextPath}/register">Đăng ký thành viên</a>
+            <a class="btn" href="${pageContext.request.contextPath}/register" style="margin-top: 40px">Đăng ký thành viên</a>
         </div>
     </div>
 </body>
 </html>
+
 
 
 

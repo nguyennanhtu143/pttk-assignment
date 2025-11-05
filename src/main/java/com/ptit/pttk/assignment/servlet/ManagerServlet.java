@@ -8,18 +8,11 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet("/select-stat")
-public class SelectStatServlet extends HttpServlet {
+@WebServlet("/manager")
+public class ManagerServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("/selectStatInterface.jsp").forward(request, response);
+		request.getRequestDispatcher("/mainManagerInterface.jsp").forward(request, response);
 	}
 }
-
-
-
-
-
-
-
 
