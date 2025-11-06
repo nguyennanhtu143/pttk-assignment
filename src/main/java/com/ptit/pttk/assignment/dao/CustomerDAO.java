@@ -2,7 +2,6 @@ package com.ptit.pttk.assignment.dao;
 
 import com.ptit.pttk.assignment.model.Customer;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -11,10 +10,10 @@ public class CustomerDAO extends DAO {
 		super();
 	}
 
-	private static final String INSERT_SQL = "INSERT INTO public.\"tblCustomer\" (member_id, customer_code) VALUES (?, ?)";
+	private static final String INSERT_SQL = "INSERT INTO public.\"tblCustomer\" (tbl_member_id, customer_code) VALUES (?, ?)";
 
 	public boolean create(Integer memberId) throws SQLException {
-		StringBuilder customerCode = new StringBuilder("KH");
+		StringBuilder customerCode = new StringBuilder("CUST");
 		while (customerCode.length() < 6 - String.valueOf(customerCode.length()).length()) {
 			customerCode.append("0");
 		}
@@ -22,7 +21,6 @@ public class CustomerDAO extends DAO {
 		customerCode.append(memberId);
 		boolean result = false;
 		Customer customer = new Customer(memberId, customerCode.toString());
-		Connection connection = null;
 		try {
 			PreparedStatement ps = connection.prepareStatement(INSERT_SQL);
 
@@ -33,7 +31,9 @@ public class CustomerDAO extends DAO {
 			connection.commit();
 			result = true;
 		} catch (SQLException e) {
-			connection.rollback();
+			if (connection != null) {
+				connection.rollback();
+			}
 			e.printStackTrace();
 		}
 

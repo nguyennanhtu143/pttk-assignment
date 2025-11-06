@@ -18,6 +18,15 @@
         .links { text-align: center; margin-top: 20px; }
         .links a { color: #007bff; text-decoration: none; }
         h2 { text-align: center; margin-bottom: 20px; color: #333; }
+
+        /* Modal popup */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal { background: #fff; width: 90%; max-width: 420px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); overflow: hidden; }
+        .modal-header { padding: 14px 16px; background: #28a745; color: #fff; font-weight: bold; }
+        .modal-body { padding: 16px; color: #333; }
+        .modal-footer { padding: 12px 16px; text-align: right; background: #f7f7f7; }
+        .modal-btn { background: #28a745; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+        .modal-btn:hover { background: #218838; }
     </style>
 </head>
 <body>
@@ -30,6 +39,9 @@
 
         <% if (request.getAttribute("error") != null) { %>
             <div class="error"><%= request.getAttribute("error") %></div>
+        <% } %>
+        <% if (request.getAttribute("success") != null) { %>
+            <span id="successMsg" style="display:none;"><%= request.getAttribute("success") %></span>
         <% } %>
 
         <form id="registerForm" method="post" action="${pageContext.request.contextPath}/register" novalidate>
@@ -80,6 +92,16 @@
             <button id="submitBtn" type="submit" class="btn">Đăng ký</button>
         </form>
     </div>
+    <!-- Modal structure -->
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">Thông báo</div>
+            <div class="modal-body" id="modalMessage">Thao tác thành công.</div>
+            <div class="modal-footer">
+                <button id="modalOkBtn" type="button" class="modal-btn">OK</button>
+            </div>
+        </div>
+    </div>
     <script>
         (function() {
             var password = document.getElementById('password');
@@ -87,6 +109,10 @@
             var pwError = document.getElementById('pwError');
             var submitBtn = document.getElementById('submitBtn');
             var form = document.getElementById('registerForm');
+            var successMsgEl = document.getElementById('successMsg');
+            var modalOverlay = document.getElementById('modalOverlay');
+            var modalMessage = document.getElementById('modalMessage');
+            var modalOkBtn = document.getElementById('modalOkBtn');
 
             function validatePasswordMatch() {
                 var isMismatch = password.value !== confirmPassword.value;
@@ -108,10 +134,35 @@
                     pwError.style.display = 'block';
                 }
             });
+
+            function showModal(message) {
+                if (message) {
+                    modalMessage.textContent = message;
+                }
+                modalOverlay.style.display = 'flex';
+            }
+
+            function hideModal() {
+                modalOverlay.style.display = 'none';
+            }
+
+            if (successMsgEl && successMsgEl.textContent && successMsgEl.textContent.trim().length > 0) {
+                showModal(successMsgEl.textContent.trim());
+            }
+
+            if (modalOkBtn) {
+                modalOkBtn.addEventListener('click', function() {
+                    hideModal();
+                    if (form) {
+                        form.reset();
+                    }
+                });
+            }
         })();
     </script>
 </body>
 </html>
+
 
 
 

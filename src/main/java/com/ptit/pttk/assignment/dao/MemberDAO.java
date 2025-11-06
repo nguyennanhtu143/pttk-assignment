@@ -36,8 +36,6 @@ public class MemberDAO extends DAO {
 				connection.rollback();
 				return 0;
 			}
-			resultSet.close();
-			preparedStatement.close();
 
 		} catch (SQLException e) {
 			connection.rollback();

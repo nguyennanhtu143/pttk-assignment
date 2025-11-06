@@ -41,23 +41,23 @@ public class RegisterMemberServlet extends HttpServlet {
 			int id = memberDAO.register(new Member(username, password, fullname, dateOfBirth, gender, phone, address));
 			if (id == 0) {
 				request.setAttribute("error", "Tên đăng nhập đã tồn tại!");
-				request.getRequestDispatcher("/registerMember.jsp").forward(request, response);
+				request.getRequestDispatcher("/registerMemberInterface.jsp").forward(request, response);
 				return;
 			}
 
 			boolean res = customerDAO.create(id);
 			if (res) {
 				request.setAttribute("success", "Đăng ký thành công!");
-				request.getRequestDispatcher("/registerMember.jsp").forward(request, response);
+				request.getRequestDispatcher("/registerMemberInterface.jsp").forward(request, response);
 				return;
 			}
 
 			request.setAttribute("error", "Đăng ký thất bại. Vui lòng thử lại.");
-			request.getRequestDispatcher("/registerMember.jsp").forward(request, response);
+			request.getRequestDispatcher("/registerMemberInterface.jsp").forward(request, response);
 			return;
 		} catch (Exception e) {
 			request.setAttribute("error", "Đăng ký thất bại. Vui lòng thử lại.");
-			request.getRequestDispatcher("/registerMember.jsp").forward(request, response);
+			request.getRequestDispatcher("/registerMemberInterface.jsp").forward(request, response);
 			return;
 		}
 	}
