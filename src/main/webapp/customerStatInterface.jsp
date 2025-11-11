@@ -74,6 +74,27 @@
     <div class="stats-info">
         <strong>Kết quả thống kê từ <%= startDate %> đến <%= endDate %>:</strong>
     </div>
+    <%
+        Integer currentPage = (Integer) request.getAttribute("page");
+        Integer totalPages = (Integer) request.getAttribute("totalPages");
+        Integer pageSize = (Integer) request.getAttribute("pageSize");
+        Integer totalItems = (Integer) request.getAttribute("totalItems");
+        if (currentPage == null) currentPage = 1;
+        if (totalPages == null) totalPages = 1;
+        if (pageSize == null) pageSize = 10;
+        if (totalItems == null) totalItems = customerStats.size();
+    %>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;">
+        <div>Trang <strong><%= currentPage %></strong>/<strong><%= totalPages %></strong> • Tổng bản ghi: <strong><%= totalItems %></strong></div>
+        <form id="pagerForm" method="post" action="${pageContext.request.contextPath}/customer-stat" style="display:flex;gap:8px;align-items:center;">
+            <input type="hidden" name="startDate" value="<%= startDate %>"/>
+            <input type="hidden" name="endDate" value="<%= endDate %>"/>
+            <input type="hidden" id="pageInput" name="page" value="<%= currentPage %>"/>
+            <input type="hidden" id="pageSizeInput" name="pageSize" value="<%= pageSize %>"/>
+            <button type="submit" class="btn" onclick="document.getElementById('pageInput').value=<%= Math.max(1, currentPage-1) %>" <%= currentPage <= 1 ? "disabled" : "" %>>← Trang trước</button>
+            <button type="submit" class="btn" onclick="document.getElementById('pageInput').value=<%= Math.min(totalPages, currentPage+1) %>" <%= currentPage >= totalPages ? "disabled" : "" %>>Trang sau →</button>
+        </form>
+    </div>
     <table>
         <thead>
             <tr>
@@ -106,6 +127,17 @@
             </tr>
         </tbody>
     </table>
+    <div style="display:flex;align-items:center;justify-content:flex-end;margin-top:12px;">
+        <form id="pagerFormBottom" method="post" action="${pageContext.request.contextPath}/customer-stat" style="display:flex;gap:8px;align-items:center;">
+            <input type="hidden" name="startDate" value="<%= startDate %>"/>
+            <input type="hidden" name="endDate" value="<%= endDate %>"/>
+            <input type="hidden" id="pageInputBottom" name="page" value="<%= currentPage %>"/>
+            <input type="hidden" id="pageSizeInputBottom" name="pageSize" value="<%= pageSize %>"/>
+            <span style="color:#6c757d;">Trang <strong><%= currentPage %></strong>/<strong><%= totalPages %></strong></span>
+            <button type="submit" class="btn" onclick="document.getElementById('pageInputBottom').value=<%= Math.max(1, currentPage-1) %>" <%= currentPage <= 1 ? "disabled" : "" %>>← Trang trước</button>
+            <button type="submit" class="btn" onclick="document.getElementById('pageInputBottom').value=<%= Math.min(totalPages, currentPage+1) %>" <%= currentPage >= totalPages ? "disabled" : "" %>>Trang sau →</button>
+        </form>
+    </div>
     <% } else if (customerStats != null && customerStats.isEmpty()) { %>
     <div class="stats-info" style="text-align: center; margin-top: 20px;">
         Không có dữ liệu thống kê trong khoảng thời gian đã chọn.

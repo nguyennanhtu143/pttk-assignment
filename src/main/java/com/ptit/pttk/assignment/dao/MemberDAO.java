@@ -15,10 +15,19 @@ public class MemberDAO extends DAO {
 	public int register(Member member) throws SQLException {
 		int id = 0;
 		try {
-			if (this.existsUsername(member.getUsername())) {
+//			if (this.existsUsername(member.getUsername())) {
+//				return 0;
+//			}
+
+			//validate existed username
+			PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_USERNAME_SQL);
+			preparedStatement.setString(1, member.getUsername());
+			ResultSet resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
 				return 0;
 			}
-			PreparedStatement preparedStatement = connection.prepareStatement(INSERT_SQL);
+
+			preparedStatement = connection.prepareStatement(INSERT_SQL);
 
 			connection.setAutoCommit(false);
 			preparedStatement.setString(1, member.getUsername());
@@ -28,7 +37,7 @@ public class MemberDAO extends DAO {
 			preparedStatement.setInt(5, member.getGender());
 			preparedStatement.setString(6, member.getPhone());
 			preparedStatement.setString(7, member.getAddress());
-			ResultSet resultSet = preparedStatement.executeQuery();
+			resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
 				id = resultSet.getInt(1);
 				connection.commit();

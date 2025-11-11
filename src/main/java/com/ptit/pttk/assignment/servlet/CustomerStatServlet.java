@@ -31,6 +31,15 @@ public class CustomerStatServlet extends HttpServlet {
 		try {
 			String startDateStr = request.getParameter("startDate");
 			String endDateStr = request.getParameter("endDate");
+			// Phân trang: page và pageSize
+			int page = 1;
+			int pageSize = 10;
+			try {
+				page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
+			} catch (NumberFormatException ignore) { page = 1; }
+			try {
+				pageSize = request.getParameter("pageSize") != null ? Integer.parseInt(request.getParameter("pageSize")) : 10;
+			} catch (NumberFormatException ignore) { pageSize = 10; }
 			
 			if (startDateStr == null || endDateStr == null || startDateStr.isEmpty() || endDateStr.isEmpty()) {
 				request.setAttribute("error", "Vui lòng nhập đầy đủ ngày bắt đầu và ngày kết thúc!");
@@ -42,9 +51,24 @@ public class CustomerStatServlet extends HttpServlet {
 			Date endDate = Date.valueOf(endDateStr);
 			
 			List<CustomerStat> customerStats = customerStatDAO.getCustomerStats(startDate, endDate);
-			request.setAttribute("customerStats", customerStats);
+
+			//phan trang
+			int totalItems = customerStats != null ? customerStats.size() : 0;
+			int totalPages = (int) Math.ceil(totalItems / (double) Math.max(pageSize, 1));
+			if (totalPages == 0) totalPages = 1;
+			if (page < 1) page = 1;
+			if (page > totalPages) page = totalPages;
+			int fromIndex = Math.max(0, (page - 1) * Math.max(pageSize, 1));
+			int toIndex = Math.min(totalItems, fromIndex + Math.max(pageSize, 1));
+			List<CustomerStat> pagedStats = customerStats != null ? customerStats.subList(fromIndex, toIndex) : customerStats;
+
+			request.setAttribute("customerStats", pagedStats);
 			request.setAttribute("startDate", startDateStr);
 			request.setAttribute("endDate", endDateStr);
+			request.setAttribute("page", page);
+			request.setAttribute("pageSize", pageSize);
+			request.setAttribute("totalPages", totalPages);
+			request.setAttribute("totalItems", totalItems);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
